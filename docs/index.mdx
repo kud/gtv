@@ -1,0 +1,132 @@
+---
+title: "gtv"
+description: "Google TV control library — device store, discovery, pairing, and a stateful remote session"
+---
+
+`@kud/gtv` is the framework-agnostic core of the GTV ecosystem. It handles mDNS discovery, dependency-injected pairing, a stateful remote session, a curated app catalog, and a shared device store — all as pure data with no I/O assumptions of its own. It's the shared core that [`gtv-cli`](https://kud.io/projects/gtv-cli) and `mcp-gtv` build on.
+
+## 🚀 Getting started
+
+Install from npm:
+
+```sh
+npm install @kud/gtv
+```
+
+Requires Node.js ≥ 22.
+
+Discover a device on your network, then pair with it. `onSecret` is a callback you supply — the library never reads from a terminal or shows a dialog itself, so the same flow works from a CLI, an MCP round-trip, or a desktop app.
+
+```ts
+import { discover, pair } from "@kud/gtv"
+
+const [tv] = await discover()
+
+await pair({
+  host: tv.host,
+  hostname: tv.hostname,
+  port: tv.port,
+  name: tv.name,
+  onSecret: async () => promptUserForPin(), // PIN displayed on the TV screen
+})
+```
+
+## 📡 Stateful session
+
+`createSession()` returns a stateful `EventEmitter` that reduces the underlying protocol stream into a single observable `SessionState`. Subscribe to `"change"` for connected, powered, volume, and current-app updates, and drive the device with `sendKey`, `typeText`, and `launchApp`.
+
+```ts
+import { createSession, KEYS } from "@kud/gtv"
+
+const session = createSession() // uses the currently configured device
+session.on("change", (state) => console.log(state))
+
+session.sendKey(KEYS.home)
+session.typeText("interstellar")
+session.launchApp("market://launch?id=com.netflix.ninja")
+session.stop()
+```
+
+| Member             | Type                                            | Description                                                  |
+| ------------------ | ----------------------------------------------- | ------------------------------------------------------------ |
+| `state`            | `SessionState`                                  | Current snapshot (connected, powered, volume, currentApp, …) |
+| `sendKey`          | `(keyCode: number, direction?: number) => void` | Send a remote keypress                                       |
+| `typeText`         | `(text: string) => void`                        | IME text input                                               |
+| `launchApp`        | `(link: string) => void`                        | Open an app by URI                                           |
+| `stop`             | `() => void`                                    | Tear down the connection                                     |
+| `on("change", cb)` | —                                               | Fires on every state update                                  |
+| `on("error", cb)`  | —                                               | Fires on connection errors                                   |
+
+## ⚡ One-shot helpers
+
+For scripts that don't need a long-lived connection, the one-shot helpers open a connection, do one thing, and close it.
+
+```ts
+import { sendKey, launchApp, findApp, appLink, KEYS } from "@kud/gtv"
+
+await sendKey(KEYS.mute)
+
+const netflix = findApp("netflix")
+if (netflix) await launchApp(appLink(netflix))
+```
+
+| Export                                  | Description                                      |
+| --------------------------------------- | ------------------------------------------------ |
+| `connect(device?)`                      | Opens a raw `AndroidRemote`, resolves when ready |
+| `withRemote(fn, device?)`               | Runs `fn(remote)` then closes the connection     |
+| `sendKey(keyCode, direction?, device?)` | One-shot key send                                |
+| `launchApp(link, device?)`              | One-shot app launch                              |
+
+## 📱 App catalog
+
+A curated list of common apps (Netflix, YouTube, Prime Video, Plex, Disney+, Spotify, …). `appLink` builds the reliable `market://launch?id=<package>` URI that opens an app deterministically.
+
+| Export     | Signature                                  | Description                                    |
+| ---------- | ------------------------------------------ | ---------------------------------------------- |
+| `APPS`     | `AppEntry[]`                               | Curated catalog of known apps                  |
+| `listApps` | `() => AppEntry[]`                         | Returns `APPS`                                 |
+| `findApp`  | `(query: string) => AppEntry \| undefined` | Case-insensitive match on `id` or display name |
+| `appLink`  | `(app: AppEntry) => string`                | Builds the `market://launch?id=<package>` URI  |
+
+## 🗄️ Config store
+
+Config lives at `~/.config/gtv/config.json` and is shared across every consumer (`gtv-cli`, `mcp-gtv`, `gtv-app`), so all of them read and write one device registry.
+
+| Export                    | Description                      |
+| ------------------------- | -------------------------------- |
+| `readConfig`              | Read the full config file        |
+| `listDevices`             | All paired devices               |
+| `getCurrentDevice`        | The active device                |
+| `findDevice(query)`       | Find by host, name, or hostname  |
+| `upsertDevice(device)`    | Insert or update a device entry  |
+| `setCurrentDevice(host)`  | Mark a device as active          |
+| `removeDevices(hosts)`    | Delete one or more devices       |
+| `readPreferences`         | Read the preferences block       |
+| `writePreferences(prefs)` | Write the preferences block      |
+| `CONFIG_PATH`             | Absolute path to the config file |
+
+## 🔑 Keycodes
+
+`KEYS` maps friendly names to key codes; `KEY_LABELS` maps codes back to display strings. The raw `RemoteKeyCode` and `RemoteDirection` enums are re-exported so consumers only need to depend on `@kud/gtv`.
+
+| Export            | Description                                     |
+| ----------------- | ----------------------------------------------- |
+| `KEYS`            | Map of friendly names → `RemoteKeyCode` values  |
+| `KEY_LABELS`      | Map of `RemoteKeyCode` values → display strings |
+| `RemoteKeyCode`   | Re-export from `@kud/androidtv-remote`          |
+| `RemoteDirection` | Re-export from `@kud/androidtv-remote`          |
+| `setDebug`        | Enable protocol-level debug logging             |
+
+## 🛠️ Development
+
+```sh
+git clone https://github.com/kud/gtv.git
+cd gtv
+npm install
+npm run build        # compile to dist/ via tsup
+npm run build:watch  # compile in watch mode
+npm run typecheck    # type-check without emitting
+npm run clean        # delete dist/
+```
+
+The protocol layer (TLS socket, protobuf codec, key/text/app-link send) lives in [`@kud/androidtv-remote`](https://github.com/kud/androidtv-remote); `@kud/gtv` is the higher-level surface built on top of it.

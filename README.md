@@ -11,6 +11,8 @@
 
 </div>
 
+The framework-agnostic core of the Google TV stack — discovery, pairing, a stateful session, and a shared device store that every client (CLI, MCP, app) builds on.
+
 ## 🌟 Features
 
 - 🔍 **mDNS Discovery** — finds every Google TV on the local network via `dns-sd`; returns pure data, no side effects
