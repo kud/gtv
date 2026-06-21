@@ -36,3 +36,7 @@ export type { DiscoveredDevice } from "./discovery.js"
 // Pairing
 export { pair } from "./pairing.js"
 export type { PairOptions, PairResult, PairStatus } from "./pairing.js"
+
+// App catalog
+export { APPS, findApp, listApps, appLink } from "./apps.js"
+export type { AppEntry } from "./apps.js"

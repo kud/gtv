@@ -7,6 +7,7 @@ interface Session extends EventEmitter {
   readonly state: SessionState
   sendKey(keyCode: number, direction?: number): void
   typeText(text: string): void
+  launchApp(link: string): void
   stop(): void
   on(event: "change", listener: (state: SessionState) => void): this
   on(event: "error", listener: (error: Error) => void): this
@@ -88,9 +89,17 @@ const createSession = (device?: Device): Session => {
   const sendKey = (keyCode: number, direction?: number): void =>
     withReady((r) => r.sendKey(keyCode, direction))
   const typeText = (text: string): void => withReady((r) => r.sendText(text))
+  const launchApp = (link: string): void =>
+    withReady((r) => r.sendAppLink(link))
   const stop = (): void => remote?.stop()
 
-  return Object.assign(emitter, { state, sendKey, typeText, stop }) as Session
+  return Object.assign(emitter, {
+    state,
+    sendKey,
+    typeText,
+    launchApp,
+    stop,
+  }) as Session
 }
 
 export { createSession }
