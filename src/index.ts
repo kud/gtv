@@ -16,14 +16,7 @@ export {
   writePreferences,
   CONFIG_PATH,
 } from "./config.js"
-export type {
-  Config,
-  Device,
-  Cert,
-  Store,
-  Preferences,
-  IconStyle,
-} from "./config.js"
+export type { Config, Device, Cert, Store, Preferences } from "./config.js"
 
 // Keycodes
 export { KEYS, KEY_LABELS } from "./keycodes.js"

@@ -17,11 +17,9 @@ type Device = {
   cert?: Cert
 }
 
-type IconStyle = "nerd" | "emoji" | "text"
-
-type Preferences = {
-  iconStyle: IconStyle
-}
+// An opaque bag the core persists but does not interpret. Each consumer (the
+// CLI's icon style, an app's theme…) defines its own typed view over it.
+type Preferences = Record<string, unknown>
 
 type Store = {
   version: 2
@@ -32,8 +30,6 @@ type Store = {
 
 // Kept as an alias so single-device call sites read naturally.
 type Config = Device
-
-const DEFAULT_PREFERENCES: Preferences = { iconStyle: "text" }
 
 const emptyStore = (): Store => ({ version: 2, currentHost: null, devices: [] })
 
@@ -140,18 +136,11 @@ const removeDevices = (hosts: string[]): void => {
   writeStore({ ...store, currentHost, devices })
 }
 
-const readPreferences = (): Preferences => ({
-  ...DEFAULT_PREFERENCES,
-  ...readStore().preferences,
-})
+const readPreferences = (): Preferences => readStore().preferences ?? {}
 
-const writePreferences = (partial: Partial<Preferences>): Preferences => {
+const writePreferences = (partial: Preferences): Preferences => {
   const store = readStore()
-  const preferences = {
-    ...DEFAULT_PREFERENCES,
-    ...store.preferences,
-    ...partial,
-  }
+  const preferences = { ...store.preferences, ...partial }
   writeStore({ ...store, preferences })
   return preferences
 }
@@ -176,5 +165,4 @@ export {
   type Cert,
   type Store,
   type Preferences,
-  type IconStyle,
 }
