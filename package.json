@@ -39,7 +39,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@kud/androidtv-remote": "file:../androidtv-remote"
+    "@kud/androidtv-remote": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
