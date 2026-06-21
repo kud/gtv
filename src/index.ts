@@ -1,5 +1,5 @@
-// Protocol enums, re-exported so consumers need only depend on @kud/gtv.
-export { RemoteKeyCode, RemoteDirection } from "@kud/androidtv-remote"
+// Protocol enums + debug toggle, re-exported so consumers need only depend on @kud/gtv.
+export { RemoteKeyCode, RemoteDirection, setDebug } from "@kud/androidtv-remote"
 
 // Device store + preferences
 export {
