@@ -1,0 +1,53 @@
+{
+  "name": "@kud/gtv",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Google TV control library — device store, discovery, pairing, and a stateful remote session",
+  "keywords": [
+    "google-tv",
+    "android-tv",
+    "remote-control",
+    "androidtvremote2"
+  ],
+  "license": "MIT",
+  "author": "Erwann Mest <m@kud.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kud/gtv.git"
+  },
+  "homepage": "https://github.com/kud/gtv#readme",
+  "bugs": {
+    "url": "https://github.com/kud/gtv/issues"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@kud/androidtv-remote": "file:../androidtv-remote"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
