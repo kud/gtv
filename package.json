@@ -1,6 +1,6 @@
 {
   "name": "@kud/gtv",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Google TV control library — device store, discovery, pairing, and a stateful remote session",
   "keywords": [
