@@ -41,7 +41,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@kud/androidtv-remote": "0.1.1"
+    "@kud/androidtv-remote": "0.1.2"
   },
   "devDependencies": {
     "@types/node": "25.9.4",
