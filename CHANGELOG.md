@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — 2026-07-12
+
+### Highlights
+
+- The app catalog grew from 10 to 19 launchable apps. The standouts are three self-hosted media players — Jellyfin, Kodi, and VLC — plus two music apps, YouTube Music and Deezer, both using their dedicated Android TV package names rather than the phone app IDs. Four streaming services also joined: Apple TV, Crunchyroll, Paramount+, and Peacock. ([f0e7cb4](https://github.com/kud/gtv/commit/f0e7cb41d1452d1cb9696a86424af0645cedcd97))
+
+---
+
 ## v0.1.3 - 2026-07-10
 
 ### Highlights
