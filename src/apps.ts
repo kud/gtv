@@ -29,6 +29,33 @@ const APPS: AppEntry[] = [
   { id: "spotify", name: "Spotify", packageName: "com.spotify.tv.android" },
   { id: "twitch", name: "Twitch", packageName: "tv.twitch.android.app" },
   { id: "max", name: "Max", packageName: "com.wbd.stream" },
+  {
+    id: "appletv",
+    name: "Apple TV",
+    packageName: "com.apple.atve.androidtv.appletv",
+  },
+  {
+    id: "crunchyroll",
+    name: "Crunchyroll",
+    packageName: "com.crunchyroll.crunchyroid",
+  },
+  { id: "paramount", name: "Paramount+", packageName: "com.cbs.ott" },
+  {
+    id: "peacock",
+    name: "Peacock",
+    packageName: "com.peacocktv.peacockandroid",
+  },
+  // YouTube Music and Deezer ship dedicated Android TV packages, distinct from
+  // their phone apps (…apps.youtube.music / deezer.android.app).
+  {
+    id: "ytmusic",
+    name: "YouTube Music",
+    packageName: "com.google.android.youtube.tvmusic",
+  },
+  { id: "jellyfin", name: "Jellyfin", packageName: "org.jellyfin.androidtv" },
+  { id: "kodi", name: "Kodi", packageName: "org.xbmc.kodi" },
+  { id: "vlc", name: "VLC", packageName: "org.videolan.vlc" },
+  { id: "deezer", name: "Deezer", packageName: "deezer.android.tv" },
 ]
 
 // The launch URI for an app. market://launch?id=<package> is handled by the
